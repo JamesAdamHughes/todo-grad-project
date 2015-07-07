@@ -28,3 +28,13 @@ li {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.delete-button {
+    /*background-image: url('/remove_icon.png');*/
+    margin-left: 20px;
+    color : red;
+}
+
+.complete {
+    color : green;
+}

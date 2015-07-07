@@ -19,15 +19,49 @@ module.exports = function(port, middleware) {
         var todo = req.body;
 
         todo.id = latestId.toString();
+        todo.isComplete = false;
+
         latestId++;
         todos.push(todo);
-        res.set("Location", "/api/todo/0" + todo.id);
+        res.set("Location", "/api/todo/" + todo.id);
         res.sendStatus(201);
     });
 
     // Read
     app.get("/api/todo", function(req, res) {
         res.json(todos);
+    });
+
+    // Update
+    app.put("/api/todo/:id", function(req, res) {
+
+        var id = req.params.id;
+        var todo = getTodo(id);
+
+        if(todo !== undefined){  
+            console.log(req.query);          
+            //check if marking complete or changing the text
+            if(Object.keys(req.query).length !== 0){
+                //marking complete
+                console.log("marking complete");
+                todo.isComplete = true;
+            }
+            else{
+                //changing text
+                console.log("updating todo");
+                var updatedText = req.body;
+                todo["title"] = updatedText.title;
+            }
+            res.sendStatus(200);
+            console.log(todo);
+        }
+        else{
+            console.log("NO TODO FOUND");
+            res.sendStatus(404);
+        }
+
+        
+        
     });
 
     // Delete
