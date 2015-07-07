@@ -21,7 +21,7 @@ testing.describe("end to end", function() {
         testing.it("displays TODO title", function() {
             helpers.navigateToSite(server);
             helpers.getTitleText(server).then(function(text) {
-                assert.equal(text, "TODO List");
+                assert.equal(text, "James's TODO List");
             });
         });
         testing.it("displays empty TODO list", function() {

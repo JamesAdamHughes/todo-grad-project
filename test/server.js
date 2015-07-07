@@ -6,6 +6,12 @@ var testPort = 52684;
 var baseUrl = "http://localhost:" + testPort;
 var todoListUrl = baseUrl + "/api/todo";
 
+var testTodo = {
+        title: "This is a TODO item",
+        done: false,
+        isComplete: false
+    };
+
 describe("server", function() {
     var serverInstance;
     beforeEach(function() {
@@ -38,10 +44,7 @@ describe("server", function() {
         it("responds with status code 201", function(done) {
             request.post({
                 url: todoListUrl,
-                json: {
-                    title: "This is a TODO item",
-                    done: false
-                }
+                json: testTodo
             }, function(error, response) {
                 assert.equal(response.statusCode, 201);
                 done();
@@ -50,10 +53,7 @@ describe("server", function() {
         it("responds with the location of the newly added resource", function(done) {
             request.post({
                 url: todoListUrl,
-                json: {
-                    title: "This is a TODO item",
-                    done: false
-                }
+                json: testTodo
             }, function(error, response) {
                 assert.equal(response.headers.location, "/api/todo/0");
                 done();
@@ -62,16 +62,14 @@ describe("server", function() {
         it("inserts the todo at the end of the list of todos", function(done) {
             request.post({
                 url: todoListUrl,
-                json: {
-                    title: "This is a TODO item",
-                    done: false
-                }
+                json: testTodo
             }, function() {
                 request.get(todoListUrl, function(error, response, body) {
                     assert.deepEqual(JSON.parse(body), [{
                         title: "This is a TODO item",
                         done: false,
-                        id: "0"
+                        id: "0",
+                        isComplete: false
                     }]);
                     done();
                 });
@@ -88,10 +86,7 @@ describe("server", function() {
         it("responds with status code 200", function(done) {
             request.post({
                 url: todoListUrl,
-                json: {
-                    title: "This is a TODO item",
-                    done: false
-                }
+                json: testTodo
             }, function() {
                 request.del(todoListUrl + "/0", function(error, response) {
                     assert.equal(response.statusCode, 200);
@@ -102,10 +97,7 @@ describe("server", function() {
         it("removes the item from the list of todos", function(done) {
             request.put({
                 url: todoListUrl,
-                json: {
-                    title: "This is a TODO item",
-                    done: false
-                }
+                json: testTodo
             }, function() {
                 request.del(todoListUrl + "/0", function() {
                     request.get(todoListUrl, function(error, response, body) {

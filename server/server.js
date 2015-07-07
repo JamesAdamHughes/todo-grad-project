@@ -1,6 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var underscore = require("underscore");
+var _ = require("underscore");
 
 module.exports = function(port, middleware) {
     var app = express();
@@ -38,30 +38,27 @@ module.exports = function(port, middleware) {
         var id = req.params.id;
         var todo = getTodo(id);
 
-        if(todo !== undefined){  
-            console.log(req.query);          
+        if (todo !== undefined) {
+            console.log(req.query);
             //check if marking complete or changing the text
-            if(Object.keys(req.query).length !== 0){
+            if (Object.keys(req.query).length !== 0) {
                 //marking complete
                 console.log("marking complete");
                 todo.isComplete = true;
             }
-            else{
+            else {
                 //changing text
                 console.log("updating todo");
                 var updatedText = req.body;
-                todo["title"] = updatedText.title;
+                todo.title = updatedText.title;
             }
             res.sendStatus(200);
             console.log(todo);
         }
-        else{
+        else {
             console.log("NO TODO FOUND");
             res.sendStatus(404);
         }
-
-        
-        
     });
 
     // Delete
@@ -74,8 +71,8 @@ module.exports = function(port, middleware) {
 
         if (todo) {
 
-            //keep only todos not deleted            
-            todos = underscore.filter(todos, function(otherTodo){
+            //keep only todos not deleted
+            todos = _.filter(todos, function(otherTodo) {
                 return otherTodo !== todo;
             });
 
@@ -86,9 +83,9 @@ module.exports = function(port, middleware) {
     });
 
     function getTodo(id) {
-        return todos.filter(function(todo) {
+        return _.find(todos, function(todo) {
             return todo.id === id;
-        })[0];
+        });
     }
 
     return app.listen(port);
