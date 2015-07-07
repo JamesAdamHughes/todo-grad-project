@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var underscore = require("underscore");
 
 module.exports = function(port, middleware) {
     var app = express();
@@ -33,9 +34,12 @@ module.exports = function(port, middleware) {
         var id = req.params.id;
         var todo = getTodo(id);
         if (todo) {
-            todos = todos.filter(function(otherTodo) {
+
+            //keep only todos not deleted            
+            todos = underscore.filter(todos, function(otherTodo){
                 return otherTodo !== todo;
             });
+
             res.sendStatus(200);
         } else {
             res.sendStatus(404);
