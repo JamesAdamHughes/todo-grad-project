@@ -51,10 +51,35 @@ function reloadTodoList() {
         todoListPlaceholder.style.display = "none";
         todos.forEach(function(todo) {
             var listItem = document.createElement("li");
+            var delButton = document.createElement("button");
+
             listItem.textContent = todo.title;
+            delButton.textContent = "Delete Todo";
+
+            //remove todo item on click
+            delButton.addEventListener("click", function(){
+                var createRequest = new XMLHttpRequest();
+
+                //send API request 
+                createRequest.open("DELETE", "/api/todo/" + todo.id);
+                createRequest.onload = function() {
+                    if(this.status === 200){
+                        console.log("DELETED SUCCESSFULLY");
+                        reloadTodoList();
+                    }
+                    else{
+                        error.textContent = "Failed to get list. Server returned " + this.status + " - " + this.responseText;
+                    }
+                };
+                createRequest.send();
+            });         
+
+            listItem.appendChild(delButton);
             todoList.appendChild(listItem);
         });
     });
 }
+
+
 
 reloadTodoList();

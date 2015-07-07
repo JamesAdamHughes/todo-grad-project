@@ -17,10 +17,11 @@ module.exports = function(port, middleware) {
     // Create
     app.post("/api/todo", function(req, res) {
         var todo = req.body;
+
         todo.id = latestId.toString();
         latestId++;
         todos.push(todo);
-        res.set("Location", "/api/todo/" + todo.id);
+        res.set("Location", "/api/todo/0" + todo.id);
         res.sendStatus(201);
     });
 
@@ -31,8 +32,12 @@ module.exports = function(port, middleware) {
 
     // Delete
     app.delete("/api/todo/:id", function(req, res) {
+
         var id = req.params.id;
         var todo = getTodo(id);
+
+        console.log("Deleting item" + id);
+
         if (todo) {
 
             //keep only todos not deleted            
