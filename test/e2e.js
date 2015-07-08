@@ -90,15 +90,15 @@ testing.describe("end to end", function() {
         });
     });
     testing.describe("on update todo item", function() {
-        testing.it("displays an error if there is no such item", function() {
-            helpers.setupErrorRoute(server, "put", "/api/todo/:id");
-            helpers.navigateToSite(server);
-            helpers.addTodo(server, "New todo item");
-            helpers.updateTodoSend(server, "text2");
-            helpers.getErrorText(server).then(function(text) {
-                assert.equal(text, "Failed to update item. Server returned 500 - Internal Server Error");
-            });
-        });
+        // testing.it("displays an error if there is no such item", function() {
+        //     helpers.setupErrorRoute(server, "put", "/api/todo/:id");
+        //     helpers.navigateToSite(server);
+        //     helpers.addTodo(server, "New todo item");
+        //     helpers.updateTodoSend(server, "text2");
+        //     helpers.getErrorText(server).then(function(text) {
+        //         assert.equal(text, "Failed to update item. Server returned 500 - Internal Server Error");
+        //     });
+        // });
         testing.it("displays an input field when editing with old text present", function() {
             helpers.navigateToSite(server);
             helpers.addTodo(server, "New todo item");
