@@ -70,5 +70,67 @@ testing.describe("end to end", function() {
             });
         });
     });
+    testing.describe("on delete todo item", function() {
+        testing.it("removes the item from the list", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.removeTodo(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 0);
+            });
+        });
+        testing.it("displays an error if the delete fails", function() {
+            helpers.setupErrorRoute(server, "delete", "/api/todo/:id");
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.removeTodo(server);
+            helpers.getErrorText(server).then(function(text) {
+                assert.equal(text, "Failed to delete item. Server returned 500 - Internal Server Error");
+            });
+        });
+    });
+    testing.describe("on update todo item", function() {
+        testing.it("displays an error if there is no such item", function() {
+            helpers.setupErrorRoute(server, "put", "/api/todo/:id");
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.updateTodoSend(server, "text2");
+            helpers.getErrorText(server).then(function(text) {
+                assert.equal(text, "Failed to update item. Server returned 500 - Internal Server Error");
+            });
+        });
+        testing.it("displays an input field when editing with old text present", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.updateTodoPress(server).then(function(text) {
+                assert.equal(text, "New todo item");
+            });
+        });
+        testing.it("todo updates with new text", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "text1");
+            helpers.updateTodoSend(server, "text2").then(function(text) {
+                assert.equal(text, "text1text2");
+            });
+        });
+    });
+    testing.describe("on mark todo complete", function() {
+        testing.it("displays an error if there is no such item", function() {
+            helpers.setupErrorRoute(server, "put", "/api/todo/:id");
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.markTodoComplete(server);
+            helpers.getErrorText(server).then(function(text) {
+                assert.equal(text, "Failed to complete item. Server returned 500 - Internal Server Error");
+            });
+        });
+        testing.it("complete marks task as green", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.markTodoComplete(server).then(function(color) {
+                assert.equal(color, "rgba(0, 128, 0, 1)");
+            });
+        });
+    });
 });
 

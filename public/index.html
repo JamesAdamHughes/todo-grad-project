@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>TODO List James</title>
+        <title id="page-title">TODO List James</title>
         <link href="main.css" rel="stylesheet" type="text/css">
         <link rel="icon" type="image/ico" href="favicon.ico">
     </head>
@@ -10,15 +10,20 @@
         <header>
             <h1>James's TODO List</h1>
         </header>
-        <section>
-            <h2 id="todo-list-placeholder">Loading...</h2>
-            <ul id="todo-list"></ul>
-            <form id="todo-form" style="margin-left:20px;">
-                <input id="new-todo" placeholder="What needs to be done?" autofocus>
-                <input id="submit-todo" type="submit" value="Create">
-            </form>
-            <div id="error"></div>
-        </section>
-        <script type="text/javascript" src="main.js"></script>
+        <div id="content">   
+            <div style="margin-left:40px">
+                <p id="count-label">0 Complete Items<p>
+                <button id="delete-all-button" onclick="deleteAllComplete()">Delete all complete items</button>
+            </div>
+            <section>
+                <h2 id="todo-list-placeholder">Loading...</h2>
+                <ul id="todo-list"></ul>
+                <form id="todo-form" style="margin-left:20px;margin-top:40px">
+                    <input id="new-todo" placeholder="What needs to be done?" autofocus>
+                    <input id="submit-todo" type="submit" value="Create">
+                </form>
+                <div id="error"></div>
+            </section>
+            <script type="text/javascript" src="main.js"></script>        </div>
     </body>
 </html>

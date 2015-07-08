@@ -108,4 +108,58 @@ describe("server", function() {
             });
         });
     });
+    describe("update a todo", function() {
+        it("responds with a 404 if there is no such item", function(done) {
+            request.put(todoListUrl + "/0", function(error, response) {
+                assert.equal(response.statusCode, 404);
+                done();
+            });
+        });
+        it("changes todo text", function(done) {
+            var newTodo = {
+                title: "changed",
+                done: false,
+                isComplete: false
+            };
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.put({
+                    url: todoListUrl + "/0",
+                    json: newTodo
+                }, function() {
+                    request.get(todoListUrl, function(error, response, body) {
+                        assert.deepEqual(JSON.parse(body), [{
+                            title: "changed",
+                            done: false,
+                            id: "0",
+                            isComplete: false
+                        }]);
+                        done();
+                    });
+                });
+            });
+        });
+        it("marks a todo as complete", function(done) {
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.put({
+                    url: todoListUrl + "/0?isComplete=true",
+                }, function() {
+                    request.get(todoListUrl, function(error, response, body) {
+                        assert.deepEqual(JSON.parse(body), [{
+                            title: "This is a TODO item",
+                            done: false,
+                            id: "0",
+                            isComplete: true
+                        }]);
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });

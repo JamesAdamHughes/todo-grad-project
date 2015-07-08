@@ -38,25 +38,21 @@ module.exports = function(port, middleware) {
         var id = req.params.id;
         var todo = getTodo(id);
 
+        // res.sendStatus(500);
+
         if (todo !== undefined) {
-            console.log(req.query);
             //check if marking complete or changing the text
             if (Object.keys(req.query).length !== 0) {
                 //marking complete
-                console.log("marking complete");
                 todo.isComplete = true;
             }
             else {
-                //changing text
-                console.log("updating todo");
                 var updatedText = req.body;
                 todo.title = updatedText.title;
             }
             res.sendStatus(200);
-            console.log(todo);
         }
         else {
-            console.log("NO TODO FOUND");
             res.sendStatus(404);
         }
     });
@@ -67,10 +63,9 @@ module.exports = function(port, middleware) {
         var id = req.params.id;
         var todo = getTodo(id);
 
-        console.log("Deleting item" + id);
+        // res.sendStatus(500);
 
         if (todo) {
-
             //keep only todos not deleted
             todos = _.filter(todos, function(otherTodo) {
                 return otherTodo !== todo;
@@ -80,6 +75,23 @@ module.exports = function(port, middleware) {
         } else {
             res.sendStatus(404);
         }
+    });
+
+    //used to delete items in batch
+    app.post("/api/todo/batch", function(req, res) {
+
+        var ids = req.body.ids;
+
+        //remove any todos that are marked complete
+        todos = _.filter(todos, function(otherTodo) {
+            return (ids.indexOf(otherTodo.id) <= -1);
+        });
+
+        res.sendStatus(200);
+    });
+
+    app.post("/api/message/:message", function(req, res) {
+        console.log(req.params.message);
     });
 
     function getTodo(id) {

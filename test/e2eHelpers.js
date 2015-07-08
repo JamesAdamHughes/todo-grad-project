@@ -70,6 +70,29 @@ module.exports.addTodo = function(server, text) {
     server.driver.findElement(webdriver.By.id("submit-todo")).click();
 };
 
+module.exports.removeTodo = function(server) {
+    var todoListPlaceholder = server.driver.findElement(webdriver.By.id("todo-list-placeholder"));
+    server.driver.wait(webdriver.until.elementIsNotVisible(todoListPlaceholder), 5000);
+    server.driver.findElement(webdriver.By.id("delete-button")).click();
+};
+
+module.exports.updateTodoPress = function(server) {
+    server.driver.findElement(webdriver.By.id("update-button")).click();
+    return server.driver.findElement(webdriver.By.id("update-input")).getAttribute("value");
+};
+
+module.exports.updateTodoSend = function(server, text) {
+    server.driver.findElement(webdriver.By.id("update-button")).click();
+    server.driver.findElement(webdriver.By.id("update-input")).sendKeys(text);
+    server.driver.findElement(webdriver.By.id("update-submit")).click();
+    return server.driver.findElement(webdriver.By.id("todo-text")).getText();
+};
+
+module.exports.markTodoComplete = function(server) {
+    server.driver.findElement(webdriver.By.id("complete-button")).click();
+    return server.driver.findElement(webdriver.By.id("todo-text")).getCssValue("color");
+};
+
 module.exports.setupErrorRoute = function(server, action, route) {
     if (action === "get") {
         server.router.get(route, function(req, res) {
@@ -81,4 +104,15 @@ module.exports.setupErrorRoute = function(server, action, route) {
             res.sendStatus(500);
         });
     }
+    if (action === "delete") {
+        server.router.delete(route, function(req, res) {
+            res.sendStatus(500);
+        });
+    }
+    if (action === "put") {
+        server.router.put(route, function(req, res) {
+            res.sendStatus(500);
+        });
+    }
+
 };

@@ -29,6 +29,10 @@ li {
     padding-bottom: 5px;
 }
 
+#content {
+    padding-left: 20px;
+}
+
 .delete-button {
     /*background-image: url('/remove_icon.png');*/
     margin-left: 20px;
