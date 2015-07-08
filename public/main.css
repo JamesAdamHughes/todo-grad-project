@@ -33,11 +33,12 @@ li {
     padding-left: 20px;
 }
 
-.delete-button {
-    /*background-image: url('/remove_icon.png');*/
-    margin-left: 20px;
-    color : red;
+.button {
+    border-radius: 10px;
+    margin: 5px;
+    box-shadow: 5px 3px 2px 0px #ccc;
 }
+
 
 .complete {
     color : green;

@@ -49,19 +49,12 @@ function reloadTodoList() {
             var listItem = document.createElement("li");
             var itemContent = document.createElement("div");
             var itemText = document.createElement("p");
-            var delButton = document.createElement("button");
-            var updateButton = document.createElement("button");
-            var completeButton = document.createElement("button");
+            var delButton = createButton("delete-button", "Delete Todo");
+            var updateButton = createButton("update-button", "Edit Todo");
+            var completeButton =  createButton("complete-button", "Complete");
 
             itemText.textContent = todo.title;
             itemText.setAttribute("id", "todo-text");
-            delButton.textContent = "Delete Todo";
-            // delButton.className = "delete-button";
-            delButton.setAttribute("id", "delete-button");
-            updateButton.textContent = "Edit Todo";
-            updateButton.setAttribute("id", "update-button");
-            completeButton.textContent = "Complete";
-            completeButton.setAttribute("id", "complete-button");
 
             //remove todo item on click
             delButton.addEventListener("click", function() {
@@ -165,6 +158,14 @@ function makeHttpRequest(type, url, statusCode, errorMsg, json, callback) {
     else {
         createRequest.send();
     }
+}
+
+function createButton(id, text){
+    var button = document.createElement("button");
+    button.textContent = text;
+    button.className = "button";
+    button.setAttribute("id", id);
+    return button;
 }
 
 reloadTodoList();
