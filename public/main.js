@@ -106,13 +106,15 @@ function reloadTodoList() {
             }
             numItems++;
 
-            //add todo elements to the DOM
-            itemContent.appendChild(itemText);
-            itemContent.appendChild(delButton);
-            itemContent.appendChild(updateButton);
-            itemContent.appendChild(completeButton);
-            listItem.appendChild(itemContent);
-            todoList.appendChild(listItem);
+            if (todo.toggle) {
+                //add todo elements to the DOM
+                itemContent.appendChild(itemText);
+                itemContent.appendChild(delButton);
+                itemContent.appendChild(updateButton);
+                itemContent.appendChild(completeButton);
+                listItem.appendChild(itemContent);
+                todoList.appendChild(listItem);
+            }
 
             countLabel.innerHTML = completeItems + "/" + numItems + " Todos Complete";
         });
@@ -131,8 +133,47 @@ function deleteAllComplete() {
             }
         });
 
-        makeHttpRequest("POST", "/api/todo/batch", 200,
-        "delete item", {ids : toDelete}, reloadTodoList);
+        makeHttpRequest("DELETE", "/api/todo/batch", 200,
+            "delete item", {ids : toDelete}, reloadTodoList);
+    });
+}
+
+function toggleAllOn() {
+    toggleVisable(function(todo, toShow) {
+        todo.toggle = true;
+        toShow.push(todo.id);
+    });
+}
+
+function toggleActiveOn() {
+    toggleVisable(function(todo, toShow) {
+        if (todo.isComplete !== true) {
+            todo.toggle = true;
+            toShow.push(todo.id);
+        }
+    });
+}
+
+function toggleCompleteOn() {
+    toggleVisable(function(todo, toShow) {
+        if (todo.isComplete === true) {
+            todo.toggle = true;
+            toShow.push(todo.id);
+        }
+    });
+}
+
+function toggleVisable(condition) {
+    var toShow = [];
+
+    //get all items
+    getTodoList(function(todos) {
+        todos.forEach(function(todo) {
+            condition(todo, toShow);
+        });
+
+        makeHttpRequest("PUT", "/api/todo/batch?toggle=true", 200,
+                "toggle item", {todos: toShow}, reloadTodoList);
     });
 }
 
@@ -151,13 +192,9 @@ function makeHttpRequest(type, url, statusCode, errorMsg, json, callback) {
         }
     };
 
-    if (type === "POST" || type === "PUT") {
-        createRequest.setRequestHeader("Content-type", "application/json");
-        createRequest.send(JSON.stringify(json));
-    }
-    else {
-        createRequest.send();
-    }
+    createRequest.setRequestHeader("Content-type", "application/json");
+    createRequest.send(JSON.stringify(json));
+
 }
 
 function createButton(id, text) {

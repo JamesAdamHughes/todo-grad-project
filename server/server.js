@@ -20,6 +20,7 @@ module.exports = function(port, middleware) {
 
         todo.id = latestId.toString();
         todo.isComplete = false;
+        todo.toggle = true;
 
         latestId++;
         todos.push(todo);
@@ -30,6 +31,33 @@ module.exports = function(port, middleware) {
     // Read
     app.get("/api/todo", function(req, res) {
         res.json(todos);
+    });
+
+    //make a change to several
+    app.put("/api/todo/batch", function(req, res) {
+        console.log(req.body);
+        console.log(req.query);
+
+        if (Object.keys(req.query).length !== 0) {
+            if (req.query.toggle !== undefined) {
+                _.each(todos, function(todo) {
+                    if (req.body.todos.indexOf(todo.id) > -1) {
+                        todo.toggle = true;
+                    }
+                    else {
+                        todo.toggle = false;
+                    }
+                });
+            }
+        }
+        else {
+
+        }
+
+        console.log(todos);
+
+        res.sendStatus(200);
+
     });
 
     // Update
@@ -43,8 +71,18 @@ module.exports = function(port, middleware) {
         if (todo !== undefined) {
             //check if marking complete or changing the text
             if (Object.keys(req.query).length !== 0) {
-                //marking complete
-                todo.isComplete = true;
+
+                if (req.query.isComplete !== undefined) {
+                    console.log("complete");
+                    //marking complete
+                    todo.isComplete = true;
+                }
+                else {
+                    console.log("toggle");
+
+                    //toggle visable or not visable
+                    todo.toggle = req.query.toggle;
+                }
             }
             else {
                 var updatedText = req.body;
@@ -54,6 +92,24 @@ module.exports = function(port, middleware) {
         }
         else {
             res.sendStatus(404);
+        }
+    });
+
+    app.delete("/api/todo/batch", function(req, res) {
+        var ids = req.body.ids;
+
+        if (ids === undefined) {
+            console.log("Ids undefined");
+            res.sendStatus(404);
+        }
+        else {
+
+            //remove any todos that are marked complete
+            todos = _.filter(todos, function(otherTodo) {
+                return (ids.indexOf(otherTodo.id) <= -1);
+            });
+
+            res.sendStatus(200);
         }
     });
 
@@ -75,19 +131,6 @@ module.exports = function(port, middleware) {
         } else {
             res.sendStatus(404);
         }
-    });
-
-    //used to delete items in batch
-    app.post("/api/todo/batch", function(req, res) {
-
-        var ids = req.body.ids;
-
-        //remove any todos that are marked complete
-        todos = _.filter(todos, function(otherTodo) {
-            return (ids.indexOf(otherTodo.id) <= -1);
-        });
-
-        res.sendStatus(200);
     });
 
     app.post("/api/message/:message", function(req, res) {

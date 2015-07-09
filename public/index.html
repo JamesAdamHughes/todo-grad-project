@@ -22,6 +22,11 @@
                     <input id="new-todo" placeholder="What needs to be done?" autofocus>
                     <input id="submit-todo" type="submit" value="Create">
                 </form>
+                <div style="margin-top:20px">
+                    <button id="toggle-all-button" class="button" onclick="toggleAllOn()">Show All</button>
+                    <button id="toggle-active-button" class="button" onclick="toggleActiveOn()">Show Active</button>
+                    <button id="toggle-complete-button" class="button" onclick="toggleCompleteOn()">Show Complete</button>        
+                </div>
                 <div id="error"></div>
             </section>
             <script type="text/javascript" src="main.js"></script>        </div>

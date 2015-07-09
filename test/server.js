@@ -9,7 +9,8 @@ var todoListUrl = baseUrl + "/api/todo";
 var testTodo = {
         title: "This is a TODO item",
         done: false,
-        isComplete: false
+        isComplete: false,
+        toggle: true
     };
 
 describe("server", function() {
@@ -69,7 +70,8 @@ describe("server", function() {
                         title: "This is a TODO item",
                         done: false,
                         id: "0",
-                        isComplete: false
+                        isComplete: false,
+                        toggle: true
                     }]);
                     done();
                 });
@@ -134,7 +136,8 @@ describe("server", function() {
                             title: "changed",
                             done: false,
                             id: "0",
-                            isComplete: false
+                            isComplete: false,
+                            toggle: true
                         }]);
                         done();
                     });
@@ -154,7 +157,8 @@ describe("server", function() {
                             title: "This is a TODO item",
                             done: false,
                             id: "0",
-                            isComplete: true
+                            isComplete: true,
+                            toggle: true
                         }]);
                         done();
                     });
@@ -162,4 +166,12 @@ describe("server", function() {
             });
         });
     });
+    // describe("batch change todos" , function() {
+    //     it("responds with a 404 if there are no todos", function(done) {
+    //         request.put(todoListUrl + "/batch", function(error, response) {
+    //             assert.equal(response.statusCode, 404);
+    //             done();
+    //         });
+    //     });
+    // });
 });
