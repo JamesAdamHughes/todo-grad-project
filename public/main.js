@@ -160,7 +160,7 @@ function makeHttpRequest(type, url, statusCode, errorMsg, json, callback) {
     }
 }
 
-function createButton(id, text){
+function createButton(id, text) {
     var button = document.createElement("button");
     button.textContent = text;
     button.className = "button";
