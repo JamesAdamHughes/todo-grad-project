@@ -178,23 +178,32 @@ function toggleVisable(condition) {
 }
 
 //Makes an http request to the server
-function makeHttpRequest(type, url, statusCode, errorMsg, json, callback) {
-    var createRequest = new XMLHttpRequest();
-    createRequest.open(type, url);
-    createRequest.onload = function() {
+function makeHttpRequest(type, url, statusCode, errorMsg, body, callback) {
+    fetch(url, {
+        method: type,
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    }).then(checkStatus).then(function() {
+        callback();
+    }).catch(function(err) {
+        console.log(err.response.statusText);
+        error.textContent = "Failed to " + errorMsg + ". Server returned " +
+                err.response.status + " - " + err.response.statusText;
+    });
+}
 
-        if (this.status === statusCode) {
-            callback();
-        }
-        else {
-            error.textContent = "Failed to " + errorMsg + ". Server returned " +
-                this.status + " - " + this.responseText;
-        }
-    };
-
-    createRequest.setRequestHeader("Content-type", "application/json");
-    createRequest.send(JSON.stringify(json));
-
+function checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return response;
+    }
+    else {
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+    }
 }
 
 function createButton(id, text) {
