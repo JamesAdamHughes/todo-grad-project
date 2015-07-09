@@ -132,5 +132,66 @@ testing.describe("end to end", function() {
             });
         });
     });
+    testing.describe("On delete all complete", function() {
+        testing.it("all todos are removed", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.markTodoComplete(server);
+            helpers.deleteAllComplete(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 0);
+            });
+        });
+    });
+    testing.describe("on toggle items", function() {
+        testing.it("shows all todos", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.addTodo(server, "New todo item");
+            helpers.toggleShowAll(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 2);
+            });
+        });
+        testing.it("shows no todos when toggle active and none are", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.addTodo(server, "New todo item");
+            helpers.toggleShowActive(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 2);
+            });
+        });
+        testing.it("shows only active todos when toggled", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.addTodo(server, "New todo item");
+            helpers.markTodoComplete(server);
+            helpers.toggleShowActive(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 1);
+            });
+        });
+        testing.it("shows no todos when toggle complete and none are", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.addTodo(server, "New todo item");
+            helpers.toggleShowComplete(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 0);
+            });
+        });
+        testing.it("shows only completed todos when toggled", function() {
+            helpers.navigateToSite(server);
+            helpers.addTodo(server, "New todo item");
+            helpers.addTodo(server, "New todo item");
+            helpers.markTodoComplete(server);
+            helpers.toggleShowComplete(server);
+            helpers.getTodoList(server).then(function(elements) {
+                assert.equal(elements.length, 1);
+            });
+        });
+    });
+
 });
 

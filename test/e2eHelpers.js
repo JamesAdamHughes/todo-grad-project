@@ -96,6 +96,26 @@ module.exports.markTodoComplete = function(server) {
     return server.driver.findElement(webdriver.By.id("todo-text")).getCssValue("color");
 };
 
+module.exports.deleteAllComplete = function(server) {
+    server.driver.findElement(webdriver.By.id("delete-all-button")).click();
+    wait(server);
+};
+
+module.exports.toggleShowAll = function(server) {
+    server.driver.findElement(webdriver.By.id("toggle-all-button")).click();
+    wait(server);
+};
+
+module.exports.toggleShowActive = function(server) {
+    server.driver.findElement(webdriver.By.id("toggle-active-button")).click();
+    wait(server);
+};
+
+module.exports.toggleShowComplete = function(server) {
+    server.driver.findElement(webdriver.By.id("toggle-complete-button")).click();
+    wait(server);
+};
+
 module.exports.setupErrorRoute = function(server, action, route) {
     if (action === "get") {
         server.router.get(route, function(req, res) {
