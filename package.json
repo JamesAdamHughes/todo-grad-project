@@ -29,11 +29,11 @@
     "istanbul": "^0.3.14",
     "mocha": "^2.2.5",
     "request": "^2.55.0",
-    "selenium-webdriver": "^2.45.1",
-    "underscore": "^1.8.3"
+    "selenium-webdriver": "^2.45.1"
   },
   "dependencies": {
     "body-parser": "^1.12.4",
-    "express": "^4.12.4"
+    "express": "^4.12.4",
+    "underscore": "^1.8.3"
   }
 }
