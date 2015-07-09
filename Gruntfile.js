@@ -26,7 +26,7 @@ module.exports = function(grunt) {
                 options: {
                     reporter: "xunit",
                     captureFile: testOutputLocation + "/mocha/results.xml"
-                    //quiet: true
+                    quiet: true
                 }
             }
         },
