@@ -165,13 +165,135 @@ describe("server", function() {
                 });
             });
         });
+        it("responds witha 400 if the query string is incorrect", function(done) {
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.put({
+                    url: todoListUrl + "/0?wrong=true",
+                }, function(error, response) {
+                    assert.equal(response.statusCode, 400);
+                    done();
+                });
+            });
+        });
     });
-    // describe("batch change todos" , function() {
-    //     it("responds with a 404 if there are no todos", function(done) {
-    //         request.put(todoListUrl + "/batch", function(error, response) {
-    //             assert.equal(response.statusCode, 404);
-    //             done();
-    //         });
-    //     });
-    // });
+    describe("batch change todos" , function() {
+        it("put responds with a 400 if there is no query", function(done) {
+            request.put(todoListUrl + "/batch", function(error, response) {
+                assert.equal(response.statusCode, 400);
+                done();
+            });
+        });
+        it("put responds with a 400 if the query is malformed", function(done) {
+            request.put(todoListUrl + "/batch?wrong=true", function(error, response) {
+                assert.equal(response.statusCode, 400);
+                done();
+            });
+        });
+        it("put toggles todos correctly", function(done) {
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.post({
+                    url: todoListUrl,
+                    json: testTodo
+                }, function() {
+                    request.put({
+                        url: todoListUrl + "/batch?toggle=true",
+                        json: {todos: ["0"]}
+                    }, function() {
+                        request.get(todoListUrl, function(error, response, body) {
+                            assert.deepEqual(JSON.parse(body), [{
+                                title: "This is a TODO item",
+                                done: false,
+                                id: "0",
+                                isComplete: false,
+                                toggle: true
+                            },
+                            {
+                                title: "This is a TODO item",
+                                done: false,
+                                id: "1",
+                                isComplete: false,
+                                toggle: false
+                            }]);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        it("put toggles todos correctly and back again", function(done) {
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.post({
+                    url: todoListUrl,
+                    json: testTodo
+                }, function() {
+                    request.put({
+                        url: todoListUrl + "/batch?toggle=true",
+                        json: {todos: ["0"]}
+                    }, function() {
+                        request.put({
+                            url: todoListUrl + "/batch?toggle=true",
+                            json: {todos: []}
+                        }, function() {
+                            request.get(todoListUrl, function(error, response, body) {
+                                assert.deepEqual(JSON.parse(body), [{
+                                    title: "This is a TODO item",
+                                    done: false,
+                                    id: "0",
+                                    isComplete: false,
+                                    toggle: false
+                                },
+                                {
+                                    title: "This is a TODO item",
+                                    done: false,
+                                    id: "1",
+                                    isComplete: false,
+                                    toggle: false
+                                }]);
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        it("delete responds with a 400 if no ids are sent", function(done) {
+            request.del({
+                url: todoListUrl + "/batch",
+                json: {}
+            }, function(error, response) {
+                assert.equal(response.statusCode, 400);
+                done();
+            });
+        });
+        it("delete removes several todos at once", function(done) {
+            request.post({
+                url: todoListUrl,
+                json: testTodo
+            }, function() {
+                request.post({
+                    url: todoListUrl,
+                    json: testTodo
+                }, function() {
+                    request.del({
+                        url: todoListUrl + "/batch",
+                        json: {ids: ["0", "1"]}
+                    }, function() {
+                        request.get(todoListUrl, function(error, response, body) {
+                            assert.deepEqual(JSON.parse(body), []);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+    });
 });

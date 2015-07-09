@@ -60,36 +60,39 @@ module.exports.getErrorText = function(server) {
 };
 
 module.exports.getTodoList = function(server) {
-    var todoListPlaceholder = server.driver.findElement(webdriver.By.id("todo-list-placeholder"));
-    server.driver.wait(webdriver.until.elementIsNotVisible(todoListPlaceholder), 5000);
+    wait(server);
     return server.driver.findElements(webdriver.By.css("#todo-list li"));
 };
 
 module.exports.addTodo = function(server, text) {
     server.driver.findElement(webdriver.By.id("new-todo")).sendKeys(text);
     server.driver.findElement(webdriver.By.id("submit-todo")).click();
+    wait(server);
 };
 
 module.exports.removeTodo = function(server) {
-    var todoListPlaceholder = server.driver.findElement(webdriver.By.id("todo-list-placeholder"));
-    server.driver.wait(webdriver.until.elementIsNotVisible(todoListPlaceholder), 5000);
     server.driver.findElement(webdriver.By.id("delete-button")).click();
+    wait(server);
 };
 
 module.exports.updateTodoPress = function(server) {
     server.driver.findElement(webdriver.By.id("update-button")).click();
+    wait(server);
     return server.driver.findElement(webdriver.By.id("update-input")).getAttribute("value");
 };
 
 module.exports.updateTodoSend = function(server, text) {
     server.driver.findElement(webdriver.By.id("update-button")).click();
+    wait(server);
     server.driver.findElement(webdriver.By.id("update-input")).sendKeys(text);
     server.driver.findElement(webdriver.By.id("update-submit")).click();
+    wait(server);
     return server.driver.findElement(webdriver.By.id("todo-text")).getText();
 };
 
 module.exports.markTodoComplete = function(server) {
     server.driver.findElement(webdriver.By.id("complete-button")).click();
+    wait(server);
     return server.driver.findElement(webdriver.By.id("todo-text")).getCssValue("color");
 };
 
@@ -116,3 +119,8 @@ module.exports.setupErrorRoute = function(server, action, route) {
     }
 
 };
+
+function wait(server) {
+    var todoListPlaceholder = server.driver.findElement(webdriver.By.id("todo-list-placeholder"));
+    server.driver.wait(webdriver.until.elementIsNotVisible(todoListPlaceholder), 5000);
+}
