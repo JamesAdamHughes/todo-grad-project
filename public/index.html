@@ -6,7 +6,7 @@
         <link href="main.css" rel="stylesheet" type="text/css">
         <link rel="icon" type="image/ico" href="favicon.ico">
     </head>
-    <body ng-controller="todoController as todoCtrl">
+    <body ng-controller="todoController">
         <header>
             <h1>James's TODO List</h1>
         </header>
@@ -17,18 +17,18 @@
             </div>
             <section>
                 <!--TODO LIST -->
-                <h2 id="todo-list-placeholder" ng-hide="todoCtrl.dataFetched">Loading...</h2>
+                <h2 id="todo-list-placeholder" ng-hide="dataFetched">Loading...</h2>
                 <ul>
-                    <li id="todo-item" ng-repeat="todo in todoCtrl.todos">
+                    <li id="todo-item" ng-repeat="todo in todos">
                          <p id="item-text">{{todo.title}}</p> 
-                         <button ng-click="todoCtrl.deleteTodo(todo)">Delete Todo</button>
+                         <button ng-click="deleteTodo(todo)">Delete Todo</button>
                     </li>
                 </ul>
                
                 <!--SUBMIT TODO FORM -->
                 
-                <form id="todo-form" ng-submit="todoCtrl.createTodo()" style="margin-left:20px;margin-top:40px">
-                    <input id="new-todo" ng-model="todoCtrl.newTodo" placeholder="What needs to be done?" autofocus>
+                <form id="todo-form" ng-submit="createTodo()" style="margin-left:20px;margin-top:40px">
+                    <input id="new-todo" ng-model="newTodo" placeholder="What needs to be done?" autofocus>
                     <input id="submit-todo" type="submit" value="Create">
                 </form>
 
@@ -39,7 +39,7 @@
                     <button id="toggle-complete-button" class="button" onclick="toggleCompleteOn()">Show Complete</button> 
                     <button id="poll-button" style="visibility:hidden" onclick="poll()"></button>       
                 </div>
-                <div id="error">{{todoCtrl.errorText}}</div>
+                <div id="error">{{errorText}}</div>
             </section>
 
             <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>

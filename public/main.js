@@ -1,58 +1,55 @@
 
 var app = angular.module("todoApp", []);
 
-app.controller('todoController', [ "$http", function($http) {
+app.controller("todoController", ["$http", "$scope", function($http, $scope) {
 
-    var todoStore = this;
-    
-    todoStore.todos = [];
-    todoStore.fetched = false;
-    todoStore.newTodo = "";   
-    todoStore.errorText = "";
+    $scope.todos = [];
+    $scope.fetched = false;
+    $scope.newTodo = "";
+    $scope.errorText = "";
 
-    this.createTodo = function() {
-        $http.post("/api/todo", {title: todoStore.newTodo}).
+    $scope.createTodo = function() {
+        $http.post("/api/todo", {title: $scope.newTodo}).
             success(function(response) {
                 console.log(response);
-                todoStore.newTodo = "";
+                $scope.newTodo = "";
                 reloadTodoList();
             }).
-            error(function(data, status, headers, config) {            
-                errorHanding(data, status, "create todo");
+            error(function(data, status, headers, config) {
+                errorHanding(data, status, "create item");
             });
     };
 
-    this.deleteTodo = function(todo) {
+    $scope.deleteTodo = function(todo) {
         console.log(todo);
         $http.delete("/api/todo/" + todo.id).
             success(function(response) {
                 reloadTodoList();
             }).
-            error(function(data, status, headers, config) {            
+            error(function(data, status, headers, config) {
                 errorHanding(data, status, "delete todo");
             });
     };
 
     function errorHanding(data, status, msg) {
-        todoStore.errorText = "Failed to " + msg + ". Server returned " +
+        $scope.errorText = "Failed to " + msg + ". Server returned " +
             data + " - " + status;
     }
 
     function reloadTodoList() {
         $http.get("/api/todo").
             success(function(data) {
-                todoStore.todos = data;
-                todoStore.dataFetched = true;
-                todoStore.errorText = "";
+                $scope.todos = data;
+                $scope.dataFetched = true;
+                $scope.errorText = "";
             }).
-            error(function(data, status, headers, config) {            
-                errorHanding(data, status, "get todos");
+            error(function(data, status, headers, config) {
+                errorHanding(data, status, "get list");
             });
-    }    
+    }
 
     reloadTodoList();
 
-    
 }]);
 
 // var todoList = document.getElementById("todo-list");
