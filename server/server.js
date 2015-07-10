@@ -127,9 +127,10 @@ module.exports = function(port, middleware) {
         }
     });
 
-    // app.post("/api/message/:message", function(req, res) {
-    //     console.log(req.params.message);
-    // });
+    app.post("/api/message/:message", function(req, res) {
+        console.log(req.params.message);
+        res.sendStatus(200);
+    });
 
     function getTodo(id) {
         return _.find(todos, function(todo) {

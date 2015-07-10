@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  ng-app="todoApp">
     <head>
         <meta charset="utf-8">
         <title id="page-title">TODO List James</title>
         <link href="main.css" rel="stylesheet" type="text/css">
         <link rel="icon" type="image/ico" href="favicon.ico">
     </head>
-    <body>
+    <body ng-controller="todoController as todoCtrl">
         <header>
             <h1>James's TODO List</h1>
         </header>
         <div id="content">   
             <div style="margin-left:40px">
                 <p id="count-label">0 Complete Items<p>
-                <button id="delete-all-button" class="button" onclick="deleteAllComplete()">Delete all complete items</button>
+                <button id="delete-all-button" class="button" onclick="deleteAllComplete()">Delete all complete items</button>               
             </div>
             <section>
-                <h2 id="todo-list-placeholder">Loading...</h2>
-                <ul id="todo-list"></ul>
-                <form id="todo-form" style="margin-left:20px;margin-top:40px">
-                    <input id="new-todo" placeholder="What needs to be done?" autofocus>
+                <!--TODO LIST -->
+                <h2 id="todo-list-placeholder" ng-hide="todoCtrl.dataFetched">Loading...</h2>
+                <ul>
+                    <li id="todo-item" ng-repeat="todo in todoCtrl.todos">
+                         <p id="item-text">{{todo.title}}</p> 
+                         <button ng-click="todoCtrl.deleteTodo(todo)">Delete Todo</button>
+                    </li>
+                </ul>
+               
+                <!--SUBMIT TODO FORM -->
+                
+                <form id="todo-form" ng-submit="todoCtrl.createTodo()" style="margin-left:20px;margin-top:40px">
+                    <input id="new-todo" ng-model="todoCtrl.newTodo" placeholder="What needs to be done?" autofocus>
                     <input id="submit-todo" type="submit" value="Create">
                 </form>
+
+                <!--TOGGLE TODOS -->
                 <div style="margin-top:20px">
                     <button id="toggle-all-button" class="button" onclick="toggleAllOn()">Show All</button>
                     <button id="toggle-active-button" class="button" onclick="toggleActiveOn()">Show Active</button>
-                    <button id="toggle-complete-button" class="button" onclick="toggleCompleteOn()">Show Complete</button>        
+                    <button id="toggle-complete-button" class="button" onclick="toggleCompleteOn()">Show Complete</button> 
+                    <button id="poll-button" style="visibility:hidden" onclick="poll()"></button>       
                 </div>
-                <div id="error"></div>
+                <div id="error">{{todoCtrl.errorText}}</div>
             </section>
+
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
             <script type="text/javascript" src="fetch.js"></script>
             <script type="text/javascript" src="main.js"></script>
+           
         </div>
     </body>
 </html>
