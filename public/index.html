@@ -12,16 +12,23 @@
         </header>
         <div id="content">   
             <div style="margin-left:40px">
-                <p id="count-label">0 Complete Items<p>
-                <button id="delete-all-button" class="button" onclick="deleteAllComplete()">Delete all complete items</button>               
+                <p id="count-label">{{completeItems}} / {{todos.length}} Todos Complete<p>
+                <button id="delete-all-button" class="button" ng-click="deleteAllComplete()" ng-show="completeItems > 0" >Delete all complete items</button>               
             </div>
             <section>
                 <!--TODO LIST -->
                 <h2 id="todo-list-placeholder" ng-hide="dataFetched">Loading...</h2>
                 <ul>
                     <li id="todo-item" ng-repeat="todo in todos">
-                         <p id="item-text">{{todo.title}}</p> 
-                         <button ng-click="deleteTodo(todo)">Delete Todo</button>
+                         <p id="item-text" ng-class="{complete: todo.isComplete}" >{{todo.title}}</p> 
+                         <button ng-click="deleteTodo(todo)" class="button">Delete Todo</button>
+                         <button ng-click="completeTodo(todo)" ng-hide="todo.isComplete" class="button">Complete Todo</button>
+
+                         <!-- Update text form -->
+                         <!-- <form id="update-todo-form", ng-submit="completeTodo()" ng-show="isEditing(todo.id)">
+                            <input id="new-todo-text" ng-model="todo.title" autofocus>
+                             
+                         </form> -->
                     </li>
                 </ul>
                

@@ -49,6 +49,28 @@ module.exports = function(port, middleware) {
                 });
                 res.sendStatus(200);
             }
+            else if (req.query.toDelete !== undefined) {
+                var ids = [];
+            
+
+                req.body.todos.map( function(todo) {
+                    ids.push(todo.id);
+                });
+
+                console.log(ids);
+
+                if (ids === undefined || ids.length === 0) {
+                    res.sendStatus(400);
+                }
+                else {
+                    //TODO refactor delete out
+                    //remove any todos that are marked complete
+                    todos = _.filter(todos, function(otherTodo) {
+                        return (ids.indexOf(otherTodo.id) <= -1);
+                    });
+                    res.sendStatus(200);
+                }
+            }
             else {
                 res.sendStatus(400);
             }
@@ -80,8 +102,8 @@ module.exports = function(port, middleware) {
                 }
             }
             else {
-                var updatedText = req.body;
-                todo.title = updatedText.title;
+                //changing text
+                todo.title = req.body.updatedText;
                 success = true;
             }
         }
@@ -91,22 +113,6 @@ module.exports = function(port, middleware) {
 
         if (success) { res.sendStatus(200); }
         else { res.sendStatus(status); }
-    });
-
-    //Delete several todos at once
-    app.delete("/api/todo/batch", function(req, res) {
-        var ids = req.body.ids;
-
-        if (ids === undefined || ids.length === 0) {
-            res.sendStatus(400);
-        }
-        else {
-            //remove any todos that are marked complete
-            todos = _.filter(todos, function(otherTodo) {
-                return (ids.indexOf(otherTodo.id) <= -1);
-            });
-            res.sendStatus(200);
-        }
     });
 
     // Delete

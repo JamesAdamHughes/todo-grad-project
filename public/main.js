@@ -7,6 +7,8 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
     $scope.fetched = false;
     $scope.newTodo = "";
     $scope.errorText = "";
+    $scope.editingTodo = -1;
+    $scope.completeItems = 0;
 
     $scope.createTodo = function() {
         $http.post("/api/todo", {title: $scope.newTodo}).
@@ -21,7 +23,6 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
     };
 
     $scope.deleteTodo = function(todo) {
-        console.log(todo);
         $http.delete("/api/todo/" + todo.id).
             success(function(response) {
                 reloadTodoList();
@@ -29,6 +30,37 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
             error(function(data, status, headers, config) {
                 errorHanding(data, status, "delete todo");
             });
+    };
+
+    $scope.completeTodo = function(todo, newText) {
+        $http.put("/api/todo/" + todo.id + "?isComplete=true", {updatedText: newText}).
+            success(function(response) {
+                reloadTodoList();
+            }).
+            error(function(data, status, headers, config) {
+                errorHanding(data, status, "complete todo");
+            });
+    };
+
+    $scope.deleteAllComplete = function() {
+        var toDelete = $scope.todos.filter(function(todo) {
+            return todo.isComplete;
+        });
+
+        console.log(toDelete);
+
+        $http.put("/api/todo/batch?toDelete=true", {todos: toDelete}).
+            success(function(response) {
+                reloadTodoList();
+            }).
+            error(function(data, status, headers, config) {
+                errorHanding(data, status, "complete todo");
+            });
+
+    };
+
+    $scope.isEditing = function(id) {
+        return $scope.editingTodo === id;
     };
 
     function errorHanding(data, status, msg) {
@@ -42,6 +74,10 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
                 $scope.todos = data;
                 $scope.dataFetched = true;
                 $scope.errorText = "";
+                $scope.completeItems = $scope.todos.filter(function(todo) {
+                        return todo.isComplete;
+                    }).length;
+
             }).
             error(function(data, status, headers, config) {
                 errorHanding(data, status, "get list");
