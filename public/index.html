@@ -19,7 +19,7 @@
                 <!--TODO LIST -->
                 <h2 id="todo-list-placeholder" ng-hide="dataFetched">Loading...</h2>
                 <ul id="todo-list">
-                    <li id="todo-item" ng-repeat="todo in todos">
+                    <li id="todo-item" ng-repeat="todo in getTodosDisplay()">
 
                         <!--Todo text and control -->
                         <div ng-hide="isEditing(todo.id)">
@@ -46,10 +46,10 @@
 
                 <!--TOGGLE TODOS -->
                 <div style="margin-top:20px">
-                    <button id="toggle-all-button" class="button" onclick="toggleAllOn()">Show All</button>
-                    <button id="toggle-active-button" class="button" onclick="toggleActiveOn()">Show Active</button>
-                    <button id="toggle-complete-button" class="button" onclick="toggleCompleteOn()">Show Complete</button>
-                    <button id="poll-button" style="visibility:hidden" onclick="poll()"></button>
+                    <button id="toggle-all-button" class="button" ng-click="toggleAllOn()">Show All</button>
+                    <button id="toggle-active-button" class="button" ng-click="toggleActiveOn()">Show Active</button>
+                    <button id="toggle-complete-button" class="button" ng-click="toggleCompleteOn()">Show Complete</button>
+                    <button id="poll-button" style="visibility:hidden" ng-click="poll()"></button>
                 </div>
                 <div id="error">{{errorText}}</div>
             </section>

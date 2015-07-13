@@ -65,6 +65,7 @@ module.exports = function(port, middleware) {
                     todos = _.filter(todos, function(otherTodo) {
                         return (ids.indexOf(otherTodo.id) <= -1);
                     });
+
                     res.sendStatus(200);
                 }
             }

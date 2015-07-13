@@ -119,7 +119,7 @@ describe("server", function() {
         });
         it("changes todo text", function(done) {
             var newTodo = {
-                title: "changed",
+                updatedText: "changed",
                 done: false,
                 isComplete: false
             };
@@ -266,7 +266,7 @@ describe("server", function() {
             });
         });
         it("delete responds with a 400 if no ids are sent", function(done) {
-            request.del({
+            request.put({
                 url: todoListUrl + "/batch",
                 json: {}
             }, function(error, response) {
@@ -283,9 +283,22 @@ describe("server", function() {
                     url: todoListUrl,
                     json: testTodo
                 }, function() {
-                    request.del({
-                        url: todoListUrl + "/batch",
-                        json: {ids: ["0", "1"]}
+                    request.put({
+                        url: todoListUrl + "/batch?toDelete=true",
+                        json: {todos: [{
+                            id: "0",
+                            title: "This is a TODO item",
+                            done: false,
+                            isComplete: false,
+                            toggle: true
+                        },
+                        {
+                            id: "1",
+                            title: "This is a TODO item",
+                            done: false,
+                            isComplete: false,
+                            toggle: true
+                        }]}
                     }, function() {
                         request.get(todoListUrl, function(error, response, body) {
                             assert.deepEqual(JSON.parse(body), []);
