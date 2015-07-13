@@ -28,18 +28,34 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
                 reloadTodoList();
             }).
             error(function(data, status, headers, config) {
-                errorHanding(data, status, "delete todo");
+                errorHanding(data, status, "delete item");
             });
     };
 
-    $scope.completeTodo = function(todo, newText) {
-        $http.put("/api/todo/" + todo.id + "?isComplete=true", {updatedText: newText}).
+    $scope.completeTodo = function(todo) {
+        $http.put("/api/todo/" + todo.id + "?isComplete=true").
             success(function(response) {
                 reloadTodoList();
             }).
             error(function(data, status, headers, config) {
-                errorHanding(data, status, "complete todo");
+                errorHanding(data, status, "complete item");
             });
+
+    };
+
+    $scope.editTodo = function(todo) {
+        $scope.editingTodo = todo.id;
+    };
+
+    $scope.updateTodo = function(todo) {
+        $http.put("/api/todo/" + todo.id, {updatedText: todo.title}).
+            success(function(response) {
+                reloadTodoList();
+            }).
+            error(function(data, status, headers, config) {
+                errorHanding(data, status, "complete item");
+            });
+        $scope.editingTodo = -1;
     };
 
     $scope.deleteAllComplete = function() {
@@ -47,14 +63,12 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
             return todo.isComplete;
         });
 
-        console.log(toDelete);
-
         $http.put("/api/todo/batch?toDelete=true", {todos: toDelete}).
             success(function(response) {
                 reloadTodoList();
             }).
             error(function(data, status, headers, config) {
-                errorHanding(data, status, "complete todo");
+                errorHanding(data, status, "delete items");
             });
 
     };
@@ -65,7 +79,7 @@ app.controller("todoController", ["$http", "$scope", function($http, $scope) {
 
     function errorHanding(data, status, msg) {
         $scope.errorText = "Failed to " + msg + ". Server returned " +
-            data + " - " + status;
+            status + " - " + data ;
     }
 
     function reloadTodoList() {

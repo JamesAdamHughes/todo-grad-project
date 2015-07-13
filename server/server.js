@@ -51,13 +51,10 @@ module.exports = function(port, middleware) {
             }
             else if (req.query.toDelete !== undefined) {
                 var ids = [];
-            
 
-                req.body.todos.map( function(todo) {
+                req.body.todos.map(function(todo) {
                     ids.push(todo.id);
                 });
-
-                console.log(ids);
 
                 if (ids === undefined || ids.length === 0) {
                     res.sendStatus(400);
